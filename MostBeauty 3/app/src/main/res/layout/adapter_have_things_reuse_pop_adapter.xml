@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <TextView
+        android:gravity="center"
+        android:id="@+id/adapter_have_things_reuse_pop_btn"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/forty_dp"
+        android:textColor="@color/adapter_have_things_have_pop"
+        android:background="@drawable/shape_button"/>
+</LinearLayout>
