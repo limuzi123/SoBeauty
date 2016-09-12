@@ -30,4 +30,7 @@ public class API {
     public static String REUSE_FRAGMENT_START = "http://design.zuimeia.com/api/v1/products/category/";
     public static String REUSE_FRAGMENT_END = "/?page=1&page_size=30&device_id=000000000000000&platform=android&lang=zh&appVersion=1.1.7_1&appVersionCode=10171&systemVersion=19&countryCode=CN&user_id=0&token=&package_name=com.zuiapps.zuiworld";
     public static String USER_AGREEMENT = "http://design.zuimeia.com/term_of_use.html";
+    public static String HAVE_HAVE_ACTIVITY_START ="http://design.zuimeia.com/api/v1/product/";
+    public static String HAVE_HAVE_ACTIVITY_END = "/?device_id=000000000000000&platform=android&lang=zh&appVersion=1.1.7_1&appVersionCode=10171&systemVersion=19&countryCode=CN&user_id=0&token=&package_name=com.zuiapps.zuiworld";
+
 }

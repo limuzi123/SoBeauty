@@ -71,14 +71,14 @@ public class ReuseFragment extends BaseFragment {
 
 
         searchText();
-        if (sharedPreferences.getInt((getPosition()-1)+"",0)!=0){
-            getNetData(sharedPreferences.getInt((getPosition()-1)+"",0));
+        if (sharedPreferences.getInt((getPosition()-2)+"",0)!=0){
+            getNetData(sharedPreferences.getInt((getPosition()-2)+"",0));
         }else {
             getNetData(id);
         }
         popupWindow= CreatePop();
-        if (sharedPreferences.getString((getPosition()-1)+"text","")!=""){
-            textView.setText(sharedPreferences.getString((getPosition()-1)+"text",""));
+        if (sharedPreferences.getString((getPosition()-2)+"text","")!=""){
+            textView.setText(sharedPreferences.getString((getPosition()-2)+"text",""));
         }
     }
 
@@ -86,7 +86,7 @@ public class ReuseFragment extends BaseFragment {
      * 搜索框显示和隐藏 linearLayout点击事件
      */
     private void searchText() {
-        if (popBean.getData().getCategories().get(getPosition()-1).getSub_categories()==null){
+        if (popBean.getData().getCategories().get(getPosition()-2).getSub_categories()==null){
             linearLayout.setVisibility(View.GONE);
 
         }else {
@@ -183,9 +183,9 @@ public class ReuseFragment extends BaseFragment {
         popupWindow.setFocusable(true);//设置焦点
         //适配器
         popAdapter.setHaveThingsReuseTitleBean(popBean);
-        popAdapter.setItem(getPosition()-1);
-        popAdapter.setSelectPosition(getPosition()-1);
-        if (popBean.getData().getCategories().get(getPosition()-1).getSub_categories()!=null) {
+        popAdapter.setItem(getPosition()-2);
+        popAdapter.setSelectPosition(getPosition()-2);
+        if (popBean.getData().getCategories().get(getPosition()-2).getSub_categories()!=null) {
             gvPop.setAdapter(popAdapter);
         }
         popupWindow.setContentView(view);
@@ -195,7 +195,7 @@ public class ReuseFragment extends BaseFragment {
                 popDismiss();
             }
         });
-        popGridViewListener(popBean,getPosition()-1);
+        popGridViewListener(popBean,getPosition()-2);
         return popupWindow;
     }
 
@@ -208,18 +208,18 @@ public class ReuseFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt((getPosition()-1)+"select",position);
+                editor.putInt((getPosition()-2)+"select",position);
                 if (position==0){
                     popDismiss();
                     getNetData(HaveThingsAdapter.getId(getPosition()));
-                    editor.putInt((getPosition()-1)+"", HaveThingsAdapter.getId(getPosition()));
+                    editor.putInt((getPosition()-2)+"", HaveThingsAdapter.getId(getPosition()));
 
                 }else {
-                    int idPop = popBean.getData().getCategories().get(getPosition() - 1).getSub_categories().get(position - 1).getId();
+                    int idPop = popBean.getData().getCategories().get(getPosition() - 2).getSub_categories().get(position - 1).getId();
                     popDismiss();
                     getNetData(idPop);
-                    editor.putInt((getPosition()-1)+"", idPop);
-                    editor.putString((getPosition()-1)+"text",response.getData().getCategories().get(item).getSub_categories().get(position-1).getName());
+                    editor.putInt((getPosition()-2)+"", idPop);
+                    editor.putString((getPosition()-2)+"text",response.getData().getCategories().get(item).getSub_categories().get(position-1).getName());
                     textView.setText(response.getData().getCategories().get(item).getSub_categories().get(position-1).getName());
                 }
                 editor.apply();

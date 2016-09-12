@@ -7,8 +7,6 @@ import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build.VERSION_CODES;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.view.ViewPager.LayoutParams;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +21,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.lanou3g.mostbeauty.Bean.HaveThingsHaveBean;
 import com.lanou3g.mostbeauty.R;
 import com.lanou3g.mostbeauty.activity.HaveHaveActivity;
@@ -39,10 +38,13 @@ public class HaveThingsHaveItemAdapter extends BaseAdapter {
     private LinearLayout llLove,llCry;
     private ImageView ivLove,ivCry;
     private AnimationDrawable adLove,adCry;
-    private Message msg;
-    private Handler handler ;
+//    private Message msg;
+//    private Handler handler ;
     private TextView tvLove,tvCry;
     private PopupWindow popSmile, popCry;
+//    private String imageUrl;
+    private int id;
+//    private List<Collect> collect;
 
 
     public void setBean(HaveThingsHaveBean bean) {
@@ -79,18 +81,39 @@ public class HaveThingsHaveItemAdapter extends BaseAdapter {
         else {
             holder= (ViewHolder) convertView.getTag();
         }
+
         String str  = bean.getData().getActivities().get(position).getDigest();
         holder.digest.setText(str);
         holder.designerName.setText(bean.getData().getActivities().get(position).getDesigner().getName());
         holder.desigerLabel.setText(bean.getData().getActivities().get(position).getDesigner().getLabel());
         initGlide(holder.images,bean.getData().getActivities().get(position).getImages().get(0));
         initGlide(holder.designerAvatar,bean.getData().getActivities().get(position).getDesigner().getAvatar_url());
+        id = bean.getData().getActivities().get(position).getProduct().getId();
+//        imageUrl = bean.getData().getActivities().get(position).getImages().get(0);
+
+//        collect = OrmTool.getInstance().getAllCollect();
+//        for (Collect collect : OrmTool.getInstance().getAllCollect()) {
+//            if(collect.getIdUrl() ==id &&collect.getType()==Collect.TYPE_SMILE){
+//                holder.images.setBackgroundResource(R.mipmap.like_10);
+//                holder.smileLL.setBackgroundResource(R.drawable.shape_face_yellow);
+//                holder.cry.setBackgroundResource(R.mipmap.dislike_1);
+//                holder.cryLL.setBackgroundResource(R.drawable.shape_face);
+//            }else if(collect.getIdUrl() ==id &&collect.getType()==Collect.TYPE_CRY){
+//                holder.cry.setBackgroundResource(R.mipmap.dislike_9);
+//                holder.cryLL.setBackgroundResource(R.drawable.shape_face_yellow);
+//                holder.images.setBackgroundResource(R.mipmap.like_1);
+//                holder.smileLL.setBackgroundResource(R.drawable.shape_face);
+//
+//            }
+//
+//        }
+
+
         holder.images.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, HaveHaveActivity.class);
-                int id = bean.getData().getActivities().get(position).getProduct().getId();
-                intent.putExtra("haveId",id);
+                intent.putExtra("haveId", id);
                 context.startActivity(intent);
             }
         });
@@ -118,37 +141,11 @@ public class HaveThingsHaveItemAdapter extends BaseAdapter {
         }
     }
     public void initGlide(ImageView imageView,String url){
-        Glide.with(context).load(url).priority(Priority.HIGH).thumbnail(0.1f)
+        Glide.with(context).load(url).priority(Priority.HIGH).thumbnail(0.1f).override(300,300).diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .bitmapTransform(new CropCircleTransformation(context)).into(imageView);
-//获得图片大小
-//        Glide.with(context).load(url).asBitmap().priority(Priority.HIGH)
-//                .into(new SimpleTarget<Bitmap>() {
-//                    @Override
-//                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-//                        Log.d("HaveThingsHaveItemAdapt", "resource.getWidth():" + resource.getWidth());
-//                        Log.d("HaveThingsHaveItemAdapt", "resource.getHeight():" + resource.getHeight());
-//                    }
-//                });
+
     }
-//    private void performAnimate(View view,int height){
-//        ViewWrapper wrapper =new ViewWrapper(view);
-//        ObjectAnimator.ofInt(wrapper,"height",height).setDuration(2000).start();
-//    }
-//
-//    private static class ViewWrapper{
-//        private View mTarget;
-//
-//        public ViewWrapper(View mTarget) {
-//            this.mTarget = mTarget;
-//        }
-//        public int getHeight(){
-//            return mTarget.getLayoutParams().height;
-//        }
-//        public void setHeight(int height){
-//            mTarget.getLayoutParams().height = height;
-//            mTarget.requestLayout();
-//        }
-//    }
+
 
     public PopupWindow createPopLove(int height,int total){
         PopupWindow popupWindow = new PopupWindow(context);
@@ -198,6 +195,11 @@ public class HaveThingsHaveItemAdapter extends BaseAdapter {
                     popCry.showAsDropDown(cry, 0, -(heightCry/2+200));
                     popSmile.showAsDropDown(smile, 0, -(heightSmile/2+200 ));
                     adLove.start();
+//                    //删
+//                    OrmTool.getInstance().deleteIdUrl( collect.get(0));
+//                    //存
+//                    OrmTool.getInstance().insertCollect(new Collect(imageUrl,id,Collect.TYPE_SMILE));
+
                     popSmile.setOnDismissListener(
                             new OnDismissListener() {
                                 @Override
@@ -209,13 +211,9 @@ public class HaveThingsHaveItemAdapter extends BaseAdapter {
                                     cryLL.setBackgroundResource(R.drawable.shape_face);
                                 }
                             });
-//                ObjectAnimator.ofFloat(finalHolder.smileLL,"scaleY",heightSmile).setDuration(2000).start();
-//                performAnimate(finalHolder.smileLL,heightSmile);
+
                 }
-//                else {
-//                    popCry.dismiss();
-//                    popSmile.dismiss();
-//                }
+
             }
         });
         cry.setOnClickListener(new OnClickListener() {
@@ -229,6 +227,11 @@ public class HaveThingsHaveItemAdapter extends BaseAdapter {
                     popCry.showAsDropDown(cry, 0, -(heightCry/2+200 ));
                     popSmile.showAsDropDown(smile, 0, -(heightSmile /2+200));
                     adCry.start();
+
+//                    //删
+//                    OrmTool.getInstance().deleteIdUrl(collect.get(0));
+//                    //存
+//                    OrmTool.getInstance().insertCollect(new Collect(imageUrl,id,Collect.TYPE_CRY));
                     popCry.setOnDismissListener(new OnDismissListener() {
                         @Override
                         public void onDismiss() {
@@ -239,51 +242,15 @@ public class HaveThingsHaveItemAdapter extends BaseAdapter {
                         }
                     });
 
-//                    threadPop(heightCry,popCry,finalHolder.cry);
-//                    threadPop(heightSmile,popSmile,finalHolder.smile);
-
-//                ObjectAnimator.ofFloat(finalHolder.cryLL,"scaleY",heightCry).setDuration(2000).start();
-//                performAnimate(finalHolder.cryLL,heightCry);
 
                 }
 
-//                else {
-//                    popCry.dismiss();
-//                    popSmile.dismiss();
-//                }
 
             }
         });
     }
 
-//    private void threadPop(final int height, final PopupWindow popupWindow, final View view) {
-//
-//        handler = new Handler(new Callback() {
-//            @Override
-//            public boolean handleMessage(Message msg) {
-//                int i = msg.arg1;
-//                popupWindow.showAsDropDown(view,0,-(i/2+200));
-//                return false;
-//            }
-//        });
-//
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                int i;
-//                for (i = 0; i < height; i++) {
-//                    try {
-//                        Thread.sleep(500);
-//                        msg = new Message();
-//                        msg.arg1 = i;
-//                        handler.sendMessage(msg);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        }).start();
-//    }
+
 
 
 

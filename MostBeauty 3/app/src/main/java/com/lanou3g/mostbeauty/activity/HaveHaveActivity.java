@@ -14,7 +14,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.LayoutParams;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -192,7 +191,7 @@ public class HaveHaveActivity extends BaseActivity {
     }
 
     private void getNetData(int id) {
-        NetTool.getInstance().startRequest("http://design.zuimeia.com/api/v1/product/" + id + "/?device_id=000000000000000&platform=android&lang=zh&appVersion=1.1.7_1&appVersionCode=10171&systemVersion=19&countryCode=CN&user_id=0&token=&package_name=com.zuiapps.zuiworld"
+        NetTool.getInstance().startRequest(API.HAVE_HAVE_ACTIVITY_START + id + API.HAVE_HAVE_ACTIVITY_END
                 , HaveHaveBean.class, new onHttpCallBack<HaveHaveBean>() {
                     @Override
                     public void onSuccess(final HaveHaveBean response) {
@@ -469,7 +468,7 @@ public class HaveHaveActivity extends BaseActivity {
     }
 
     /**
-     * 点击显示pop 发广播
+     * 点击显示pop
      * @param smile
      * @param cry
      * @param heightSmile
@@ -486,8 +485,6 @@ public class HaveHaveActivity extends BaseActivity {
             public void onClick(View v) {
                 editor.putInt("havePosition",position);
                 editor.apply();
-                Log.d("+++++++++++++", "cun");
-                Log.d("+++++++++++++", "position:" + position);
                 final PopupWindow popCry = createPopCry(heightCry,heightCry+heightSmile);
                 final PopupWindow popSmile =  createPopLove(heightSmile,heightCry+heightSmile);
                 if (!popCry.isShowing()&&!popSmile.isShowing()) {
@@ -506,6 +503,9 @@ public class HaveHaveActivity extends BaseActivity {
                                     cryLL.setBackgroundResource(R.drawable.shape_face);
                                 }
                             });
+
+
+
                 }
             }
         });

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -184,7 +183,6 @@ public class HaveThingsHaveAdapter extends BaseAdapter {
     public  void setSelectGridView(){
         SharedPreferences sharedPreferences = context.getSharedPreferences("best", Activity.MODE_PRIVATE);
         int position = sharedPreferences.getInt("havePosition",100);
-        Log.d("+++++++++++++", "执行");
         holder.gridView.getChildAt(position).setBackgroundColor(0xeeffffff);
     }
 
