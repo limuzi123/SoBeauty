@@ -7,6 +7,7 @@ import com.litesuits.orm.db.enums.AssignType;
 /**
  * Created by dllo on 16/9/8.
  */
+//实体类
 @Table("care_db")
 public class Care {
     private String imgBigUrl,imgNameUrl,name,title;

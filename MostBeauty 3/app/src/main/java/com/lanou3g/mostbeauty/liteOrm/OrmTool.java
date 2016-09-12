@@ -10,11 +10,12 @@ import java.util.List;
 /**
  * Created by dllo on 16/9/8.
  */
+//工具类封装
 public class OrmTool {
     private static OrmTool ourInstance;
     private static LiteOrm liteOrm;
 
-
+//单例模式
     public static OrmTool getInstance() {
         if (ourInstance == null) {
             synchronized ((OrmTool.class)) {
@@ -30,7 +31,6 @@ public class OrmTool {
     private OrmTool() {
         liteOrm = LiteOrm.newCascadeInstance(MyApp.getContext(), "net.db");
     }
-
 
 
     public void insertCollect(Collect collect) {
@@ -77,24 +77,29 @@ public class OrmTool {
     public void deleteLike() {
         liteOrm.deleteAll(Like.class);
     }
-    public void deleteCare(){
+
+    public void deleteCare() {
         liteOrm.deleteAll(Care.class);
 
     }
-    public void deletaCareByName(Care care){
+
+    public void deletaCareByName(Care care) {
 
         liteOrm.delete(WhereBuilder.create(Care.class).where("name" + "=?", new String[]{care.getName()}));
     }
-public void deletaLikeByName(Like like){
 
-   liteOrm.delete(WhereBuilder.create(Like.class).where("name" + "=?", new String[]{like.getName()}));
-}
+    public void deletaLikeByName(Like like) {
+
+        liteOrm.delete(WhereBuilder.create(Like.class).where("name" + "=?", new String[]{like.getName()}));
+    }
+
     public List<Like> getLikeName(Like like) {
         QueryBuilder<Like> likeQueryBuilder = new QueryBuilder<Like>(Like.class)
                 .where("name" + "=?", new String[]{like.getName()});
         return liteOrm.query(likeQueryBuilder);
 
     }
+
     public List<Like> getLikeImg(Like like) {
         QueryBuilder<Like> likeQueryBuilder = new QueryBuilder<Like>(Like.class)
                 .where("imgUrl" + "=?", new String[]{like.getImgUrl()});
