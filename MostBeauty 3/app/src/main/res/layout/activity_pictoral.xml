@@ -278,7 +278,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:layout_marginTop="@dimen/ten"
-                                    android:text="微信" />
+                                    android:text="@string/tv_weixin" />
 
 
                             </LinearLayout>
@@ -304,7 +304,7 @@
                         android:layout_marginLeft="@dimen/twenty"
                         android:layout_marginTop="@dimen/forty"
 
-                        android:text="设计师 and 作品"
+                        android:text="@string/and"
                         android:textColor="@color/color_hui" />
 
                     <LinearLayout

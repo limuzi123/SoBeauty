@@ -27,6 +27,9 @@ public class PictorialFragment extends BaseFragment implements Overview.RecentsV
     Overview mRecentsView;
     private ArrayList<Integer> models;
     private PictrialFragmentAdapter adapter;
+    private static PictorialBean response;
+
+
     @Override
     protected int initLayout() {
         return R.layout.fragment_pictorial;
@@ -73,6 +76,7 @@ public class PictorialFragment extends BaseFragment implements Overview.RecentsV
         NetTool.getInstance().startRequest(API.PICTORIAL_FRAGMENT, PictorialBean.class, new onHttpCallBack<PictorialBean>() {
             @Override
             public void onSuccess(PictorialBean response) {
+                PictorialFragment.response=response;
                 adapter.setBean(response);
                 mRecentsView.setTaskStack(adapter);
                 for(int i = 0; i < response.getData().getArticles().size(); ++i){
@@ -106,5 +110,8 @@ public class PictorialFragment extends BaseFragment implements Overview.RecentsV
     @Override
     public void onAllCardsDismissed() {
 
+    }
+    public static PictorialBean getResponse(){
+        return response;
     }
 }

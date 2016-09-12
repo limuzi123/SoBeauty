@@ -45,9 +45,9 @@ public class PivtorialAnthorInfo {
         infos = new ArrayList<>();
 
         infos.add(new PivtorialAnthorInfo("作品", new PictorialProductionFragment()));
-       // if(PictorialAuthorActivity.getResponseTwo().getData().getId()==PictorialAuthorActivity.getId()){
+        if(PictorialAuthorActivity.getResponseTwo().getData().getId()!=PictorialAuthorActivity.getId()){
             infos.add(new PivtorialAnthorInfo("画报", new PictorialSmallFragment()));
-     //   }
+        }
        if (PictorialAuthorActivity.getResponse().getData().getShops().size() != 0) {
             infos.add(new PivtorialAnthorInfo("旗舰门店", new PictorialStoreFragment()));
        }

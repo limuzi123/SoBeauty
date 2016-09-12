@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.lanou3g.mostbeauty.Bean.AssistBean;
 import com.lanou3g.mostbeauty.R;
 import com.lanou3g.mostbeauty.liteOrm.Collect;
 import com.lanou3g.mostbeauty.liteOrm.Like;
@@ -22,9 +23,17 @@ import java.util.List;
 public class AssistListAdapter extends BaseAdapter{
     private List<Like> likeList;
     private Context context;
+    private String idStr;
+    private AssistBean  bean;
 
-    public AssistListAdapter(Context context) {
+    public AssistListAdapter(Context context,String idStr) {
         this.context = context;
+        this.idStr = idStr;
+    }
+
+    public void setBean(AssistBean bean) {
+        this.bean = bean;
+        notifyDataSetChanged();
     }
 
     public void setLikeList(List<Like> likeList) {
@@ -34,12 +43,23 @@ public class AssistListAdapter extends BaseAdapter{
 
     @Override
     public int getCount() {
-        return likeList.size();
+        if(idStr != null){
+            return bean.getData().getArticles().size();
+        }else {
+            return likeList.size();
+        }
+
+
     }
 
     @Override
     public Object getItem(int position) {
-        return likeList.get(position);
+        if(idStr != null){
+            return bean.getData().getArticles().get(position);
+        }else {
+            return likeList.get(position);
+        }
+
     }
 
     @Override
@@ -58,10 +78,17 @@ public class AssistListAdapter extends BaseAdapter{
             holder = (ViewHolder) convertView.getTag();
 
         }
-        holder.tvName.setText(likeList.get(position).getName());
-        holder.tvContent.setText(likeList.get(position).getContent());
-        Log.d("AssistListAdapter", "aaaaaaaa"+likeList.get(position).getContent());
-        Glide.with(context).load(likeList.get(position).getImgUrl()).into(holder.imageView);
+        if(idStr != null){
+            holder.tvName.setText(bean.getData().getArticles().get(position).getTitle());
+            holder.tvContent.setText(bean.getData().getArticles().get(position).getSub_title());
+            Glide.with(context).load(bean.getData().getArticles().get(position).getImage_url()).into(holder.imageView);
+        }else {
+            holder.tvName.setText(likeList.get(position).getName());
+            holder.tvContent.setText(likeList.get(position).getContent());
+            Log.d("AssistListAdapter", "aaaaaaaa"+likeList.get(position).getContent());
+            Glide.with(context).load(likeList.get(position).getImgUrl()).into(holder.imageView);
+        }
+
         return convertView;
     }
     class ViewHolder{

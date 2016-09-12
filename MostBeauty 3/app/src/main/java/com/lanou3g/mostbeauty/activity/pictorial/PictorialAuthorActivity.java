@@ -107,6 +107,7 @@ public class PictorialAuthorActivity extends BaseActivity implements OnClickList
         swipeBackLayoutTwo = (SwipeBackLayout) findViewById(R.id.swipe_layout_two);
         imgBack.setOnClickListener(this);
         imgBackSmall.setOnClickListener(this);
+        imgBackTwo.setOnClickListener(this);
 
 
         pagerAdapter = new PictorialAuthorPagerAdapter(getSupportFragmentManager());
@@ -144,8 +145,6 @@ public class PictorialAuthorActivity extends BaseActivity implements OnClickList
         getTabPosition();
         getNetRequest(id);
         getStoreNetRequest(id);
-//        getStoreNetRequestSy(idSy);
-//        getNetRequestSy(idSy);
 
 
     }
@@ -324,6 +323,9 @@ public class PictorialAuthorActivity extends BaseActivity implements OnClickList
             case R.id.img_back_small:
                 finish();
                 break;
+            case R.id.img_back_two:
+                finish();
+                break;
         }
     }
 
@@ -335,5 +337,7 @@ public class PictorialAuthorActivity extends BaseActivity implements OnClickList
     public static int getId() {
         return idSy;
     }
-
+    public static PictorialAuthorActivityViewPagerTopBean getResponseTwo() {
+        return responseTwo;
+    }
 }

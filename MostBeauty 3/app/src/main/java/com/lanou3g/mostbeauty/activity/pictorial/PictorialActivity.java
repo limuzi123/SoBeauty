@@ -137,6 +137,7 @@ public class PictorialActivity extends BaseActivity implements OnClickListener {
         imgShare.setOnClickListener(this);
         imgLike.setOnClickListener(this);
         tvCare.setOnClickListener(this);
+        imgNameOne.setOnClickListener(this);
 
 
         swipeBackLayoutTwo = (SwipeBackLayout) findViewById(R.id.swipe_layout_two);
@@ -412,6 +413,19 @@ public class PictorialActivity extends BaseActivity implements OnClickListener {
                     flag = false;
                     OrmTool.getInstance().insertCare(care);
                 }
+                break;
+            case R.id.img_name_one:
+                Intent intentAuthorOne = new Intent(this, PictorialAuthorActivity.class);
+                intentAuthorOne.putExtra("idAuthor", str1);
+
+                intentAuthorOne.putExtra("id", str);
+
+                intentAuthorOne.putExtra("img", img);
+                intentAuthorOne.putExtra("tvTitle", tvTitleStr);
+                intentAuthorOne.putExtra("tvSmall", tvSmallStr);
+                startActivity(intentAuthorOne);
+                break;
+
 
 
         }

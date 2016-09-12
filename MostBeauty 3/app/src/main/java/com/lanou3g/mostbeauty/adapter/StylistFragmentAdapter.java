@@ -15,6 +15,8 @@ import com.bumptech.glide.Glide;
 import com.lanou3g.mostbeauty.Bean.StylistFragmentBean;
 import com.lanou3g.mostbeauty.R;
 import com.lanou3g.mostbeauty.activity.pictorial.PictorialAuthorActivity;
+import com.lanou3g.mostbeauty.liteOrm.Care;
+import com.lanou3g.mostbeauty.liteOrm.OrmTool;
 
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
@@ -24,6 +26,7 @@ import jp.wasabeef.glide.transformations.CropCircleTransformation;
 public class StylistFragmentAdapter extends BaseAdapter {
     private Context context;
     private StylistFragmentBean bean;
+    private boolean flag=true;
 
     public StylistFragmentAdapter(Context context) {
         this.context = context;
@@ -61,6 +64,11 @@ public class StylistFragmentAdapter extends BaseAdapter {
         }
         holder.tvName.setText(bean.getData().getDesigners().get(position).getName());
         holder.tvSmall.setText(bean.getData().getDesigners().get(position).getLabel());
+        String name = bean.getData().getDesigners().get(position).getName();
+        String content = bean.getData().getDesigners().get(position).getLabel();
+        String imgUrl = bean.getData().getDesigners().get(position).getRecommend_images().get(0);
+        String imgSmallUrl =bean.getData().getDesigners().get(position).getAvatar_url();
+        final Care care = new Care(imgUrl,imgSmallUrl,name,content);
         final int id = bean.getData().getDesigners().get(position).getId();
         holder.imgTop.setOnClickListener(new OnClickListener() {
             @Override
@@ -75,16 +83,32 @@ public class StylistFragmentAdapter extends BaseAdapter {
         Glide.with(context).load(bean.getData().getDesigners().get(position).getAvatar_url())
                 .bitmapTransform(new CropCircleTransformation(context)).into(holder.imgName);
         Glide.with(context).load(bean.getData().getDesigners().get(position).getRecommend_images().get(0)).into(holder.imgTop);
+        final ViewHolder finalHolder = holder;
+        holder.tvCare.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(flag){
+                    finalHolder.tvCare.setText("已关注");
+                    OrmTool.getInstance().insertCare(care);
+                }else {
+                    finalHolder.tvCare.setText("+关注");
+                    OrmTool.getInstance().deletaCareByName(care);
+                }
+
+
+            }
+        });
         return convertView;
     }
     class ViewHolder{
         private ImageView imgName,imgTop;
-        private TextView tvName,tvSmall;
+        private TextView tvName,tvSmall,tvCare;
         public ViewHolder(View view){
             imgName = (ImageView) view.findViewById(R.id.img_name);
             imgTop = (ImageView) view.findViewById(R.id.img_top);
             tvName = (TextView) view.findViewById(R.id.tv_name);
             tvSmall = (TextView) view.findViewById(R.id.tv_small);
+            tvCare = (TextView) view.findViewById(R.id.tv_care);
 
         }
     }

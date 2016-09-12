@@ -17,16 +17,20 @@ public class PictorialAuthorPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
 
+
         return PivtorialAnthorInfo.getTabInfos().get(position).getFragment();
     }
 
     @Override
     public int getCount() {
+
         return PivtorialAnthorInfo.getTabInfos().size();
+
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
+
         return PivtorialAnthorInfo.getTabInfos().get(position).getTitle();
     }
 }
