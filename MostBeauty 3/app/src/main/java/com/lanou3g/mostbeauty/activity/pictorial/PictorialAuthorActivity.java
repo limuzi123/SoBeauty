@@ -141,7 +141,7 @@ public class PictorialAuthorActivity extends BaseActivity implements OnClickList
         }
 
 
-        getTiltileState();
+        //getTiltileState();
         getTabPosition();
         getNetRequest(id);
         getStoreNetRequest(id);

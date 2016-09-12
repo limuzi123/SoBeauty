@@ -167,7 +167,7 @@ public class PictorialActivity extends BaseActivity implements OnClickListener {
         webView.setWebViewClient(new WebViewClient());
         webView.loadUrl(API.PICTORIAL_ACTIVITY_WEBVIEW + id + API.PICTORIAL_ACTIVITY_WEBVIEW_TWO);
         relativeLayoutSmall.getBackground().setAlpha(220);
-        scrollChangeTitle();
+      //  scrollChangeTitle();
 
         getNetRequest(id);
 

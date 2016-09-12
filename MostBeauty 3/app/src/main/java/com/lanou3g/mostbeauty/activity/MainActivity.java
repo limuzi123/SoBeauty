@@ -22,7 +22,7 @@ public class MainActivity extends BaseActivity implements OnCheckedChangeListene
     //背景音乐的开关
     private ImageView imageViewMusic;
     //用于开关背景音乐的flag
-    private boolean flag = true;
+    private boolean flag = false;
     private RadioGroup radioGroup;
     private PictorialFragment pictorial;
     private RadioButton button;
