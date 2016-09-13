@@ -36,7 +36,36 @@ public class HaveThingsFragment extends BaseFragment {
         // 2.设置ViewPager懒加载
         //viewPager.setOffscreenPageLimit(7);
         adapter=new HaveThingsAdapter(getChildFragmentManager());
+    }
 
+
+    @Override
+    protected void initData() {
+        tabLayoutCenter();
+        getNetData();
+    }
+
+    private void getNetData() {
+        NetTool.getInstance().startRequest(API.HAVE_THINGS_FRAGMENT
+
+                , HaveThingsReuseTitleBean.class
+                , new onHttpCallBack<HaveThingsReuseTitleBean>() {
+                    @Override
+                    public void onSuccess(HaveThingsReuseTitleBean response) {
+                        adapter.setBean(response);
+                        viewPager.setAdapter(adapter);
+                        tabLayout.setupWithViewPager(viewPager);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {}
+                });
+    }
+
+    /**
+     * 设置TabLayout居中显示
+     */
+    private void tabLayoutCenter() {
         WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         final int width = wm.getDefaultDisplay().getWidth();
         // final int tabwidth = tabLayout.getWidth()/viewPager.getChildCount();
@@ -54,38 +83,6 @@ public class HaveThingsFragment extends BaseFragment {
             public void onPageScrollStateChanged(int state) {}
         });
     }
-    @Override
-    protected void initData() {
-        NetTool.getInstance().startRequest(API.HAVE_THINGS_FRAGMENT
-
-                , HaveThingsReuseTitleBean.class
-                , new onHttpCallBack<HaveThingsReuseTitleBean>() {
-                    @Override
-                    public void onSuccess(HaveThingsReuseTitleBean response) {
-                        adapter.setBean(response);
-                        viewPager.setAdapter(adapter);
-                        tabLayout.setupWithViewPager(viewPager);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {}
-                });
-
-    }
-//    @Override
-//    public void onDestroyView() {
-//        unBindDrawables(getView());
-//    }
-//    private void unBindDrawables(View view){
-//        if (view.getBackground()!=null){
-//            view.getBackground().setCallback(null);
-//        }
-//        if (view instanceof ViewGroup && !(view instanceof AdapterView)){
-//            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-//                unBindDrawables(((ViewGroup) view).getChildAt(i));
-//            }((ViewGroup) view).removeAllViews();
-//        }
-//    }
 
 
 

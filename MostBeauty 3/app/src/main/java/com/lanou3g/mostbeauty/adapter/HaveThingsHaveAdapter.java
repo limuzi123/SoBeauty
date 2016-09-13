@@ -42,6 +42,7 @@ public class HaveThingsHaveAdapter extends BaseAdapter {
 
     public HaveThingsHaveAdapter(Context context) {
         this.context = context;
+        adapter = new HaveThingsHaveItemAdapter(context);
     }
 
     public void setId(String[] id) {
@@ -111,7 +112,7 @@ public class HaveThingsHaveAdapter extends BaseAdapter {
                     @Override
                     public void onSuccess(final HaveThingsHaveBean response) {
                         // TODO: 16/8/31 绑适配器
-                        adapter = new HaveThingsHaveItemAdapter(context);
+
                         adapter.setBean(response);
                         holder.listView.setAdapter(adapter);
                         setListViewHeightBasedOnChildren(holder.listView);
@@ -185,5 +186,9 @@ public class HaveThingsHaveAdapter extends BaseAdapter {
         int position = sharedPreferences.getInt("havePosition",100);
         holder.gridView.getChildAt(position).setBackgroundColor(0xeeffffff);
     }
+    public void frashData(){
+        adapter.frashData();
+    }
+
 
 }

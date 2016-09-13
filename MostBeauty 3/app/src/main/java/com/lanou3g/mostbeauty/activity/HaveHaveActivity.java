@@ -36,6 +36,9 @@ import com.lanou3g.mostbeauty.base.BaseActivity;
 import com.lanou3g.mostbeauty.base.MyApp;
 import com.lanou3g.mostbeauty.gson.NetTool;
 import com.lanou3g.mostbeauty.gson.onHttpCallBack;
+import com.lanou3g.mostbeauty.liteOrm.Collect;
+import com.lanou3g.mostbeauty.liteOrm.CollectDisLike;
+import com.lanou3g.mostbeauty.liteOrm.OrmTool;
 import com.lanou3g.mostbeauty.myview.NewScrollView;
 import com.lanou3g.mostbeauty.myview.NewScrollView.ScrollViewListener;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -135,6 +138,27 @@ public class HaveHaveActivity extends BaseActivity {
         final TranslateAnimation backDismiss = new TranslateAnimation(0,0,0,-300);
         backDismiss.setDuration(2000);
         ivBack.setAnimation(backDismiss);
+
+
+        for (Collect collect : OrmTool.getInstance().getAllCollect()) {
+            if (collect.getIdUrl() == id){
+                smile.setBackgroundResource(R.mipmap.like_10);
+                cry.setBackgroundResource(R.mipmap.dislike_1);
+                //cry.setImageResource(R.mipmap.dislike_1);
+                loveLL.setBackgroundResource(R.drawable.shape_face_yellow);
+                cryLL.setBackgroundResource(R.drawable.shape_face);
+            }
+        }
+        for (CollectDisLike collectDisLike : OrmTool.getInstance().getAllCollectDislike()) {
+
+            if (collectDisLike.getIdUrl() ==id){
+                cry.setBackgroundResource(R.mipmap.dislike_9);
+                smile.setBackgroundResource(R.mipmap.like_1);
+                cryLL.setBackgroundResource(R.drawable.shape_face_yellow);
+                loveLL.setBackgroundResource(R.drawable.shape_face);
+            }
+        }
+
         scrollView.setScrollViewListener(new ScrollViewListener() {
             @Override
             public void onScrollChanged(View scrollView, int x, int y, int oldx, int oldy) {
@@ -161,6 +185,10 @@ public class HaveHaveActivity extends BaseActivity {
                 }
             }
         });
+
+
+
+
 
 //        viewPager.addOnPageChangeListener(new OnPageChangeListener() {
 //            @Override
@@ -209,12 +237,14 @@ public class HaveHaveActivity extends BaseActivity {
 
                         int loveH = response.getData().getLike_user_num();
                         int cryH = response.getData().getUnlike_user_num();
-                        setPop(smile,cry,loveH,cryH,loveLL,cryLL);
+                        setPop(smile,cry,loveH,cryH,loveLL,cryLL,response);
                         if (response.getData().getRefer_articles().size()!=0){
                             llPaint.setVisibility(View.VISIBLE);
                             lvPaintAdapter.setBean(response);
                             lvPaint.setAdapter(lvPaintAdapter);
                         }
+
+
                     }
 
                     @Override
@@ -476,15 +506,19 @@ public class HaveHaveActivity extends BaseActivity {
      * @param smileLL
      * @param cryLL
      */
-    private void setPop(final ImageView smile, final ImageView cry, final int heightSmile , final int heightCry, final LinearLayout smileLL, final LinearLayout cryLL) {
-
-
+    private void setPop(final ImageView smile, final ImageView cry, final int heightSmile , final int heightCry, final LinearLayout smileLL, final LinearLayout cryLL, final HaveHaveBean response) {
+        final Collect collect = new Collect(response.getData().getCover_images().get(0),response.getData().getId());
+        final CollectDisLike collectDisLike = new CollectDisLike(response.getData().getCover_images().get(0),response.getData().getId());
         smile.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 editor.putInt("havePosition",position);
                 editor.apply();
+
+                OrmTool.getInstance().deleteIdUrl(collectDisLike);
+                OrmTool.getInstance().insertCollect(collect);
+
                 final PopupWindow popCry = createPopCry(heightCry,heightCry+heightSmile);
                 final PopupWindow popSmile =  createPopLove(heightSmile,heightCry+heightSmile);
                 if (!popCry.isShowing()&&!popSmile.isShowing()) {
@@ -503,9 +537,6 @@ public class HaveHaveActivity extends BaseActivity {
                                     cryLL.setBackgroundResource(R.drawable.shape_face);
                                 }
                             });
-
-
-
                 }
             }
         });
@@ -514,6 +545,10 @@ public class HaveHaveActivity extends BaseActivity {
             public void onClick(View v) {
                 editor.putInt("havePosition",position);
                 editor.apply();
+
+                OrmTool.getInstance().deleteIdUrl(collect);
+                OrmTool.getInstance().insertCollectDislike(collectDisLike);
+
                 final PopupWindow popCry = createPopCry(heightCry, heightCry+heightSmile);
                 final PopupWindow popSmile =  createPopLove(heightSmile,heightCry+heightSmile);
                 if (!popCry.isShowing()&&!popSmile.isShowing()) {
@@ -594,5 +629,6 @@ public class HaveHaveActivity extends BaseActivity {
             }
         }
     }
+
 
 }

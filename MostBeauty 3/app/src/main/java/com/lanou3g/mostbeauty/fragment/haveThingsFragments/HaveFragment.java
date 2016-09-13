@@ -1,8 +1,6 @@
 package com.lanou3g.mostbeauty.fragment.haveThingsFragments;
 
 import android.os.Bundle;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 
 import com.lanou3g.mostbeauty.R;
@@ -31,22 +29,9 @@ public class HaveFragment extends BaseFragment {
 
     @Override
     protected void initData() {
-       adapter.setId(id);
+        adapter.setId(id);
         listView.setAdapter(adapter);
-        listView.setOnScrollListener(new OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                switch (scrollState){
-                    case SCROLL_STATE_TOUCH_SCROLL:
 
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-            }
-        });
     }
     public static HaveFragment newInstance(int position){
         Bundle args = new Bundle();
@@ -74,4 +59,18 @@ public class HaveFragment extends BaseFragment {
 //            }((ViewGroup) view).removeAllViews();
 //        }
 //    }
+
+
+
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        listView.setAdapter(adapter);
+//    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        adapter.frashData();
+    }
 }

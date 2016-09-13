@@ -33,11 +33,7 @@ public class OrmTool {
     }
 
 
-    public void insertCollect(Collect collect) {
-        liteOrm.insert(collect);
 
-
-    }
 
     public void inertLike(Like like) {
         liteOrm.insert(like);
@@ -48,8 +44,35 @@ public class OrmTool {
         liteOrm.insert(care);
     }
 
+
     public void saveCollect(Collect collect) {
         liteOrm.save(collect);
+    }
+    public void insertCollect(Collect collect) {
+        liteOrm.insert(collect);
+    }
+    public List<Collect> getAllCollect() {
+        return liteOrm.query(Collect.class);
+    }
+    public void deleteIdUrl(Collect collect){
+        liteOrm.delete(WhereBuilder.create(Collect.class).where("idUrl"+"=?",new Integer[]{
+                collect.getIdUrl()
+        }));
+    }
+
+    public void saveCollectDislike(CollectDisLike disLike){
+        liteOrm.save(disLike);
+    }
+    public void insertCollectDislike(CollectDisLike disLike){
+        liteOrm.insert(disLike);
+    }
+    public List<CollectDisLike> getAllCollectDislike(){
+        return liteOrm.query(CollectDisLike.class);
+    }
+    public void deleteIdUrl(CollectDisLike disLike){
+        liteOrm.delete(WhereBuilder.create(CollectDisLike.class).where("idUrl"+"=?",new Integer[]{
+                disLike.getIdUrl()
+        }));
     }
 
     public void saveLike(Like like) {
@@ -61,10 +84,7 @@ public class OrmTool {
         liteOrm.save(care);
     }
 
-    public List<Collect> getAllCollect() {
-        return liteOrm.query(Collect.class);
 
-    }
 
     public List<Like> getAllLike() {
         return liteOrm.query(Like.class);

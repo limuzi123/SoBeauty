@@ -45,7 +45,7 @@ public class HaveThingsAdapter extends FragmentStatePagerAdapter {
         if (position==1){
             return "Daily";
         }else if (position == 0){
-            return "我喜欢的";
+            return "我喜欢";
         }else {
             return bean.getData().getCategories().get(position-2).getName();
         }

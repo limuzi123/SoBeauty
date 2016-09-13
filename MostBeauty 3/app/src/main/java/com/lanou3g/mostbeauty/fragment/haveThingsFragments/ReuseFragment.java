@@ -68,8 +68,6 @@ public class ReuseFragment extends BaseFragment {
     @Override
     protected void initData() {
         int id= HaveThingsAdapter.getId(getPosition());
-
-
         searchText();
         if (sharedPreferences.getInt((getPosition()-2)+"",0)!=0){
             getNetData(sharedPreferences.getInt((getPosition()-2)+"",0));
@@ -88,7 +86,6 @@ public class ReuseFragment extends BaseFragment {
     private void searchText() {
         if (popBean.getData().getCategories().get(getPosition()-2).getSub_categories()==null){
             linearLayout.setVisibility(View.GONE);
-
         }else {
             linearLayout.setOnClickListener(new OnClickListener() {
                 @Override
@@ -100,12 +97,10 @@ public class ReuseFragment extends BaseFragment {
 //                        popText.set
                     } else {
                         popDismiss();
-
                     }
                 }
             });
         }
-        
     }
 
     private void popShow() {
@@ -213,7 +208,6 @@ public class ReuseFragment extends BaseFragment {
                     popDismiss();
                     getNetData(HaveThingsAdapter.getId(getPosition()));
                     editor.putInt((getPosition()-2)+"", HaveThingsAdapter.getId(getPosition()));
-
                 }else {
                     int idPop = popBean.getData().getCategories().get(getPosition() - 2).getSub_categories().get(position - 1).getId();
                     popDismiss();

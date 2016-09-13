@@ -25,6 +25,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.lanou3g.mostbeauty.Bean.HaveThingsHaveBean;
 import com.lanou3g.mostbeauty.R;
 import com.lanou3g.mostbeauty.activity.HaveHaveActivity;
+import com.lanou3g.mostbeauty.liteOrm.Collect;
+import com.lanou3g.mostbeauty.liteOrm.CollectDisLike;
+import com.lanou3g.mostbeauty.liteOrm.OrmTool;
 
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
@@ -43,7 +46,7 @@ public class HaveThingsHaveItemAdapter extends BaseAdapter {
     private TextView tvLove,tvCry;
     private PopupWindow popSmile, popCry;
 //    private String imageUrl;
-    private int id;
+
 //    private List<Collect> collect;
 
 
@@ -68,6 +71,7 @@ public class HaveThingsHaveItemAdapter extends BaseAdapter {
     @Override
     public long getItemId(int position) {
         return position;
+
     }
 
     @Override
@@ -88,39 +92,17 @@ public class HaveThingsHaveItemAdapter extends BaseAdapter {
         holder.desigerLabel.setText(bean.getData().getActivities().get(position).getDesigner().getLabel());
         initGlide(holder.images,bean.getData().getActivities().get(position).getImages().get(0));
         initGlide(holder.designerAvatar,bean.getData().getActivities().get(position).getDesigner().getAvatar_url());
-        id = bean.getData().getActivities().get(position).getProduct().getId();
-//        imageUrl = bean.getData().getActivities().get(position).getImages().get(0);
-
-//        collect = OrmTool.getInstance().getAllCollect();
-//        for (Collect collect : OrmTool.getInstance().getAllCollect()) {
-//            if(collect.getIdUrl() ==id &&collect.getType()==Collect.TYPE_SMILE){
-//                holder.images.setBackgroundResource(R.mipmap.like_10);
-//                holder.smileLL.setBackgroundResource(R.drawable.shape_face_yellow);
-//                holder.cry.setBackgroundResource(R.mipmap.dislike_1);
-//                holder.cryLL.setBackgroundResource(R.drawable.shape_face);
-//            }else if(collect.getIdUrl() ==id &&collect.getType()==Collect.TYPE_CRY){
-//                holder.cry.setBackgroundResource(R.mipmap.dislike_9);
-//                holder.cryLL.setBackgroundResource(R.drawable.shape_face_yellow);
-//                holder.images.setBackgroundResource(R.mipmap.like_1);
-//                holder.smileLL.setBackgroundResource(R.drawable.shape_face);
-//
-//            }
-//
-//        }
-
-
-        holder.images.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, HaveHaveActivity.class);
-                intent.putExtra("haveId", id);
-                context.startActivity(intent);
-            }
-        });
+        final int id = bean.getData().getActivities().get(position).getProduct().getId();
         final int heightSmile = bean.getData().getActivities().get(position).getProduct().getLike_user_num();
         final int heightCry = bean.getData().getActivities().get(position).getProduct().getUnlike_user_num();
         final ViewHolder finalHolder = holder;
-        setPop(holder.smile,holder.cry,heightSmile,heightCry,finalHolder.smileLL,finalHolder.cryLL);
+
+        ReadOrmTool(position, holder);
+        goToActivity(holder, id);
+        setPop(holder.smile,holder.cry,heightSmile,heightCry
+                ,finalHolder.smileLL,finalHolder.cryLL
+                ,bean.getData().getActivities().get(position).getImages().get(0),bean.getData().getActivities().get(position).getProduct().getId());
+
         return convertView;
     }
 
@@ -140,13 +122,63 @@ public class HaveThingsHaveItemAdapter extends BaseAdapter {
             cry= (ImageView) view.findViewById(R.id.adapter_have_things_have_item_cry);
         }
     }
+    /**
+     * 跳转到第二界面
+     * @param holder
+     * @param id
+     */
+    protected void goToActivity(ViewHolder holder, final int id) {
+        holder.images.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, HaveHaveActivity.class);
+                intent.putExtra("haveId", id);
+                context.startActivity(intent);
+            }
+        });
+    }
+
+    /**
+     * 遍历数据库 设置哭笑脸
+     * @param position
+     * @param holder
+     */
+    private void ReadOrmTool(int position, ViewHolder holder) {
+        for (Collect collect : OrmTool.getInstance().getAllCollect()) {
+            if (collect.getIdUrl() == bean.getData().getActivities().get(position).getProduct().getId()){
+                holder.smile.setBackgroundResource(R.mipmap.like_10);
+                holder.cry.setBackgroundResource(R.mipmap.dislike_1);
+                holder.smileLL.setBackgroundResource(R.drawable.shape_face_yellow);
+                holder.cryLL.setBackgroundResource(R.drawable.shape_face);
+            }
+        }
+        for (CollectDisLike collectDisLike : OrmTool.getInstance().getAllCollectDislike()) {
+            if (collectDisLike.getIdUrl() ==bean.getData().getActivities().get(position).getProduct().getId()){
+                holder.cry.setBackgroundResource(R.mipmap.dislike_9);
+                holder.smile.setBackgroundResource(R.mipmap.like_1);
+                holder.cryLL.setBackgroundResource(R.drawable.shape_face_yellow);
+                holder.smileLL.setBackgroundResource(R.drawable.shape_face);
+            }
+        }
+    }
+
+    /**
+     * 设置glide图片解析
+     * @param imageView
+     * @param url
+     */
     public void initGlide(ImageView imageView,String url){
         Glide.with(context).load(url).priority(Priority.HIGH).thumbnail(0.1f).override(300,300).diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .bitmapTransform(new CropCircleTransformation(context)).into(imageView);
 
     }
 
-
+    /**
+     * 创建笑脸Pop
+     * @param height
+     * @param total
+     * @return
+     */
     public PopupWindow createPopLove(int height,int total){
         PopupWindow popupWindow = new PopupWindow(context);
         popupWindow.setHeight(height/2+200);
@@ -165,6 +197,13 @@ public class HaveThingsHaveItemAdapter extends BaseAdapter {
         popupWindow.setAnimationStyle(R.style.pop);
         return popupWindow;
     }
+
+    /**
+     * 创建哭脸Pop
+     * @param height
+     * @param total
+     * @return
+     */
     public PopupWindow createPopCry(int height,int total){
         PopupWindow popupWindow = new PopupWindow(context);
         popupWindow.setHeight(height/2+200);
@@ -183,11 +222,34 @@ public class HaveThingsHaveItemAdapter extends BaseAdapter {
         popupWindow.setAnimationStyle(R.style.pop);
         return popupWindow;
     }
-    private void setPop(final ImageView smile, final ImageView cry, final int heightSmile , final int heightCry, final LinearLayout smileLL, final LinearLayout cryLL) {
+
+
+    /**
+     * 设置哭笑脸点击动画 & 存数据库
+     * @param smile
+     * @param cry
+     * @param heightSmile
+     * @param heightCry
+     * @param smileLL
+     * @param cryLL
+     * @param imageUrl
+     * @param idUrl
+     */
+    private void setPop(final ImageView smile, final ImageView cry, final int heightSmile , final int heightCry,
+                        final LinearLayout smileLL, final LinearLayout cryLL,
+                        String imageUrl, int idUrl) {
+
+        final Collect collect = new Collect(imageUrl,idUrl);
+        final CollectDisLike dislike = new CollectDisLike(imageUrl,idUrl);
+
         smile.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                 popCry = createPopCry(heightCry,heightCry+heightSmile);
+
+                OrmTool.getInstance().deleteIdUrl(dislike);
+                OrmTool.getInstance().insertCollect(collect);
+
+                popCry = createPopCry(heightCry,heightCry+heightSmile);
                  popSmile =  createPopLove(heightSmile,heightCry+heightSmile);
                 if (!popCry.isShowing()&&!popSmile.isShowing()) {
                     llLove.setBackgroundResource(R.drawable.shape_face_yellow);
@@ -195,11 +257,6 @@ public class HaveThingsHaveItemAdapter extends BaseAdapter {
                     popCry.showAsDropDown(cry, 0, -(heightCry/2+200));
                     popSmile.showAsDropDown(smile, 0, -(heightSmile/2+200 ));
                     adLove.start();
-//                    //删
-//                    OrmTool.getInstance().deleteIdUrl( collect.get(0));
-//                    //存
-//                    OrmTool.getInstance().insertCollect(new Collect(imageUrl,id,Collect.TYPE_SMILE));
-
                     popSmile.setOnDismissListener(
                             new OnDismissListener() {
                                 @Override
@@ -211,7 +268,6 @@ public class HaveThingsHaveItemAdapter extends BaseAdapter {
                                     cryLL.setBackgroundResource(R.drawable.shape_face);
                                 }
                             });
-
                 }
 
             }
@@ -219,6 +275,10 @@ public class HaveThingsHaveItemAdapter extends BaseAdapter {
         cry.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                OrmTool.getInstance().deleteIdUrl(collect);
+                OrmTool.getInstance().insertCollectDislike(dislike);
+
                  popCry = createPopCry(heightCry, heightCry+heightSmile);
                  popSmile =  createPopLove(heightSmile,heightCry+heightSmile);
                 if (!popCry.isShowing()&&!popSmile.isShowing()) {
@@ -227,11 +287,6 @@ public class HaveThingsHaveItemAdapter extends BaseAdapter {
                     popCry.showAsDropDown(cry, 0, -(heightCry/2+200 ));
                     popSmile.showAsDropDown(smile, 0, -(heightSmile /2+200));
                     adCry.start();
-
-//                    //删
-//                    OrmTool.getInstance().deleteIdUrl(collect.get(0));
-//                    //存
-//                    OrmTool.getInstance().insertCollect(new Collect(imageUrl,id,Collect.TYPE_CRY));
                     popCry.setOnDismissListener(new OnDismissListener() {
                         @Override
                         public void onDismiss() {
@@ -251,7 +306,9 @@ public class HaveThingsHaveItemAdapter extends BaseAdapter {
     }
 
 
-
+    public void frashData(){
+        notifyDataSetChanged();
+    }
 
 
 

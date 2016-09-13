@@ -1,18 +1,28 @@
 package com.lanou3g.mostbeauty.liteOrm;
 
+import com.litesuits.orm.db.annotation.PrimaryKey;
 import com.litesuits.orm.db.annotation.Table;
+import com.litesuits.orm.db.enums.AssignType;
 
 /**
  * Created by dllo on 16/9/12.
  */
-@Table("collect_dislike_db")
+@Table("collectDislike_db")
 public class CollectDisLike {
     private String imgUrl;
     private int idUrl;
+    @PrimaryKey(AssignType.AUTO_INCREMENT)//必须有
+    private int id;
 
     public CollectDisLike(String imgUrl, int idUrl) {
         this.imgUrl = imgUrl;
         this.idUrl = idUrl;
+    }
+
+    public CollectDisLike(String imgUrl, int idUrl, int id) {
+        this.imgUrl = imgUrl;
+        this.idUrl = idUrl;
+        this.id = id;
     }
 
     public String getImgUrl() {
